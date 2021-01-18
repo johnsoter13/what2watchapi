@@ -14,12 +14,12 @@ const FETCH_MOVIES_FROM_SEARCH = "https://utelly-tv-shows-and-movies-availabilit
 
 
 // Database
-dbConfig();
+// dbConfig();
 
 // Middleware
 middlewareConfig(app);
 
-app.use('/api', [What2WatchRoutes]);
+// app.use('/api', [What2WatchRoutes]);
 // Proxy endpoints
 app.use('/fetchMovieGenres', createProxyMiddleware({
   target: FETCH_MOVIES_GENRE_URL,
