@@ -11,6 +11,7 @@ const FETCH_MOVIE_DETAILS_URL = "https://imdb8.p.rapidapi.com/title/get-overview
 const FETCH_MOVIES_BY_GENRE_URL = "https://imdb8.p.rapidapi.com/title/get-popular-movies-by-genre";
 const FETCH_MOVIES_BY_STREAMING_SERVICES = "https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup"
 const FETCH_MOVIES_FROM_SEARCH = "https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/lookup"
+const FETCH_MOST_POPULAR_MOVIES = "https://imdb8.p.rapidapi.com/title/get-most-popular-movies"
 
 
 // Database
@@ -64,6 +65,15 @@ app.use('/fetchMovieFromSearch', createProxyMiddleware({
       [`^/fetchMovieFromSearch`]: '',
   },
     headers: UTELLY_HEADERS,
+}));
+
+app.use('/fetchMostPopularMovies', createProxyMiddleware({
+  target: FETCH_MOST_POPULAR_MOVIES,
+  changeOrigin: true,
+  pathRewrite: {
+      [`^/fetchMostPopularMovies`]: '',
+  },
+    headers: IMDB_HEADERS,
 }));
 
 const PORT = process.env.PORT || 3000;
