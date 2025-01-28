@@ -1,9 +1,18 @@
-import bodyParser from 'body-parser';
-import morgan from 'morgan';
+import bodyParser from 'body-parser'
+import morgan from 'morgan'
 
 export default (app) => {
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: false }));
+  // Add headers before the routes are defined
+  app.use(function (req, res, next) {
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*')
 
-  app.use(morgan('dev'));
-};
+    // Pass to next layer of middleware
+    next()
+  })
+
+  app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({ extended: false }))
+
+  app.use(morgan('dev'))
+}

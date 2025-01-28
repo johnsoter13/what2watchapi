@@ -1,15 +1,17 @@
 import express from 'express'
 import middlewareConfig from './config/middleware'
-import { IMDB_HEADERS, UTELLY_HEADERS } from './config/headerConstants'
+import { IMDB_HEADERS, STREAMING_AVAILABILITY } from './config/headerConstants'
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const app = express()
-const FETCH_GENRE_URL = 'https://imdb236.p.rapidapi.com/imdb/genres'
+const FETCH_GENRE_URL = 'https://streaming-availability.p.rapidapi.com/genres'
+const FETCH_MOVIES_BY_GENRE_URL =
+  'https://streaming-availability.p.rapidapi.com/shows/search/filters'
 const FETCH_DETAILS_URL = 'https://imdb236.p.rapidapi.com/imdb'
-const FETCH_BY_STREAMING_SERVICES =
-  'https://utelly-tv-shows-and-availability-v1.p.rapidapi.com/idlookup'
 const FETCH_MEDIA_FROM_SEARCH =
-  'https://utelly-tv-shows-and-availability-v1.p.rapidapi.com/lookup'
+  'https://streaming-availability.p.rapidapi.com/shows/search/title'
+const FETCH_MEDIA_FROM_MOVIE_ID =
+  'https://streaming-availability.p.rapidapi.com/shows'
 const FETCH_MOST_POPULAR =
   'https://imdb236.p.rapidapi.com/imdb/most-popular-movies'
 
@@ -29,7 +31,19 @@ app.use(
     pathRewrite: {
       [`^/fetchGenres`]: '',
     },
-    headers: IMDB_HEADERS,
+    headers: STREAMING_AVAILABILITY,
+  })
+)
+
+app.use(
+  '/fetchMoviesByGenre',
+  createProxyMiddleware({
+    target: FETCH_MOVIES_BY_GENRE_URL,
+    changeOrigin: true,
+    pathRewrite: {
+      [`^/fetchMoviesByGenre`]: '',
+    },
+    headers: STREAMING_AVAILABILITY,
   })
 )
 
@@ -45,27 +59,15 @@ app.use(
   })
 )
 
-// app.use(
-//   '/fetcByGenre',
-//   createProxyMiddleware({
-//     target: FETCH_BY_GENRE_URL,
-//     changeOrigin: true,
-//     pathRewrite: {
-//       [`^/fetcByGenre`]: '',
-//     },
-//     headers: IMDB_HEADERS,
-//   })
-// )
-
 app.use(
-  '/fetchStreamingServices',
+  '/fetchMediaFromMovieId',
   createProxyMiddleware({
-    target: FETCH_BY_STREAMING_SERVICES,
+    target: FETCH_MEDIA_FROM_MOVIE_ID,
     changeOrigin: true,
     pathRewrite: {
-      [`^/fetchStreamingServices`]: '',
+      [`^/fetchMediaFromMovieId`]: '',
     },
-    headers: UTELLY_HEADERS,
+    headers: STREAMING_AVAILABILITY,
   })
 )
 
@@ -77,7 +79,7 @@ app.use(
     pathRewrite: {
       [`^/fetchMediaFromSearch`]: '',
     },
-    headers: UTELLY_HEADERS,
+    headers: STREAMING_AVAILABILITY,
   })
 )
 
